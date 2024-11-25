@@ -119,7 +119,8 @@ async function fetchAndSaveData() {
     console.log('Input files read successfully.');
     const combinedData = [];
 
-    async function processStudentData(i) {
+    
+    for (let i = 0; i < rolls.length; i++) {
       const roll = rolls[i];
       const name = names[i];
       const url = urls[i];
@@ -129,14 +130,13 @@ async function fetchAndSaveData() {
 
       console.log(`Processing data for roll number: ${roll}, name: ${name}, section: ${section}, day: ${dayi}`);
 
-      // Check if URL is a LeetCode URL
+      
       if (url.startsWith('https://leetcode.com/u/')) {
         var username = url.split('/u/')[1];
         if (username.charAt(username.length - 1) == '/') username = username.substring(0, username.length - 1);
         console.log(`Fetching data for LeetCode username: ${username}`);
 
         try {
-          // Fetch user stats and recent submissions using GraphQL API
           const { stats, recentSubmissions } = await fetchLeet(username);
           studentData = {
             ...studentData,
@@ -158,14 +158,8 @@ async function fetchAndSaveData() {
 
       combinedData.push(studentData);
     }
+    
 
-    const promises = [];
-    for (let i = 0; i < rolls.length; i++) {
-      promises.push(processStudentData(i));
-    }
-    await Promise.all(promises);
-
-    // Sort the data by totalSolved in descending order, treating 'NA' or invalid values as 0
     combinedData.sort((a, b) => {
       const aTotalSolved = isNaN(a.totalSolved) ? 0 : a.totalSolved;
       const bTotalSolved = isNaN(b.totalSolved) ? 0 : b.totalSolved;

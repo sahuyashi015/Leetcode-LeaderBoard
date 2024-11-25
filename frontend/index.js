@@ -618,7 +618,7 @@ const oldData = {
     "2215500149":0,
     "2215500045":0,
     };
-    console.log(oldData["2215001289"]);
+    // console.log(oldData["2215001289"]);
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         
