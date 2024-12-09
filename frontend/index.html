@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="styles.css">
     <title>LeetCode Leaderboard</title>
 </head>
 <body class="bg-gray-900 text-white p-5">
@@ -24,45 +27,56 @@
                         </button>
                     </div>
                 </div>
+                <div class="flex items-center mb-4">
+                    <input
+                        id="search-bar"
+                        type="text"
+                        placeholder="Search by Name"
+                        class="w-full px-4 py-2 rounded-lg border border-gray-700 bg-gray-800 text-white "
+                    />
+                </div>
                 <table class="min-w-full bg-gray-900 rounded-lg overflow-hidden shadow-md">
                     <thead>
                         <tr class="bg-gray-700">
-                            <th class="p-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Rank</th>
-                            <th class="p-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Roll Number</th>
-                            <th class="p-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Up</th>
-                            <th class="p-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
-                            <th class="p-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            <th class="p-4 text-left text-center text-xs font-medium text-gray-300 uppercase tracking-wider  ">Rank</th>
+                            <th class="p-4 text-left text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Roll Number</th>
+                            <th class="p-4 text-left text-center  text-xs font-medium text-gray-300 uppercase tracking-wider">UP</th>
+                            <th class="p-4 text-left text-center text-xs font-medium text-gray-300 uppercase tracking-wider">Name</th>
+                            <th class="p-4 text-left text-center text-xs font-medium text-gray-300 uppercase tracking-wider">
                                 Section
                                 <button id="sort-section" class="ml-2 hover:text-white">
                                     <i class="fas fa-sort"></i>
                                 </button>
                             </th>
-                            <th class="p-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
+                            <th class="text-center p-4 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
                                 Total Solved
                                 <button id="sort-total" class="ml-2 hover:text-white">
                                     <i class="fas fa-sort"></i>
                                 </button>
                             </th>
-                            <th class="p-4 text-left text-xs font-medium text-green-400 uppercase tracking-wider">
+                            <th class="text-center p-4 text-left text-xs font-medium text-green-400 uppercase tracking-wider">
                                 Easy
                                 <button id="sort-easy" class="ml-2 hover:text-white">
                                     <i class="fas fa-sort"></i>
                                 </button>
                             </th>
-                            <th class="p-4 text-left text-xs font-medium text-yellow-400 uppercase tracking-wider">
+                            <th class="text-center p-4 text-left text-xs font-medium text-yellow-400 uppercase tracking-wider">
                                 Medium
                                 <button id="sort-medium" class="ml-2 hover:text-white">
                                     <i class="fas fa-sort"></i>
                                 </button>
                             </th>
-                            <th class="p-4 text-left text-xs font-medium text-red-400 uppercase tracking-wider">
+                            <th class="text-center p-4 text-left text-xs font-medium text-red-400 uppercase tracking-wider">
                                 Hard
                                 <button id="sort-hard" class="ml-2 hover:text-white">
                                     <i class="fas fa-sort"></i>
                                 </button>
                             </th>
-                            <th class="p-4 text-left text-xs font-medium text-red-400 uppercase tracking-wider">
-                                Last question
+                            <th class="p-4 text-left text-xs font-medium text-gray-300 text-center uppercase tracking-wider">
+                                Last Active
+                            </th>
+                            <th id="whatsapp-header" class="p-4 text-left text-xs font-medium text-green-400 uppercase tracking-wider hidden">
+                                Whatsapp
                             </th>
                         </tr>
                     </thead>

@@ -718,11 +718,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if( diff === student.totalSolved) diff =0;
                 if(student.recentSubmissions){
                     if(student.recentSubmissions.length > 0){
-                    val = student.recentSubmissions[0].title || '';
-                     utcSeconds = student.recentSubmissions[0].timestamp || 0;;
-                     d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-                    d.setUTCSeconds(utcSeconds);
-                }else {val = "" }
+
+                        val = student.recentSubmissions[0].title || '';
+                        utcSeconds = student.recentSubmissions[0].timestamp || 0;
+                        var d = new Date(0); // Set the date to the epoch
+                        d.setUTCSeconds(utcSeconds);
+                    
+                        const now = new Date();
+                        const diffInMs = now - d; // Difference in milliseconds
+                        const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24)); // Difference in days
+                    
+                        // Determine human-readable time
+                        if (diffInDays === 0) {
+                            d = "Today";
+                        } else if (diffInDays === 1) {
+                            d = "Yesterday";
+                        } else {
+                            d = `${diffInDays} days ago`;
+                        } 
+                    }else {val = "" }
                 }else{
                     val="";
                     utcSeconds = "";
@@ -732,25 +746,35 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // console.log(diff);
                 row.classList.add('border-b', 'border-gray-700');
                 row.innerHTML = `
-                    <td class="p-4">${index + 1}</td>
-                    <td class="p-4">${student.roll}</td>
-                    <td class="p-r">${(diff>0)? " \u2191 " + diff : diff}</td>
-                    <td class="p-4">
+                    <td class="text-center border border-gray-800 p-4">${index + 1}</td>
+                    <td class="text-center border border-gray-800 p-4">${student.roll}</td>
+                    <td class="text-center border border-gray-800 p-r">${(diff>0)? " \u2191 " + diff : diff}</td>
+                    <td class="text-center border border-gray-800 p-4">
                         ${student.url.startsWith('https://leetcode.com/u/') 
                             ? `<a href="${student.url}" target="_blank" class="text-blue-400">${student.name}</a>`
                             : `<div class="text-red-500">${student.name}</div>`}
                     </td>
-                    <td class="p-4">${student.section || 'N/A'}</td>
-                    <td class="p-4">${student.totalSolved || 'N/A'}</td>
-                    <td class="p-4 text-green-400">${student.easySolved || 'N/A'}</td>
-                    <td class="p-4 text-yellow-400">${student.mediumSolved || 'N/A'}</td>
-                    <td class="p-4 text-red-400">${student.hardSolved || 'N/A'}</td>
-                    <td class="p-4">
-  <span style="color: red; font-weight: bold;">${val ? val : "Not found"}</span> 
-  <span style="color: blue; font-style: italic;">at</span> 
-  <br> 
-  <span style="color: green; text-decoration: underline;">${d ? d : "Unknown date"}</span>
-</td>
+                    <td class="text-center border border-gray-800 p-4">${student.section || 'N/A'}</td>
+                    <td class="text-center border border-gray-800 p-4">${student.totalSolved || 'N/A'}</td>
+                    <td class="text-center border border-gray-800 p-4 text-green-400">${student.easySolved || 'N/A'}</td>
+                    <td class="text-center border border-gray-800 p-4 text-yellow-400">${student.mediumSolved || 'N/A'}</td>
+                    <td class="text-center border border-gray-800 p-4 text-red-400">${student.hardSolved || 'N/A'}</td>
+                    <td class="text-center border border-gray-800 p-4">
+                        <div class="text-center ">${d ? `<div class="text-sm text-green-400">${d}</div>` : `<div class="text text-red-400">Long time ago...</div>`}</div>
+                    <td class="px-2 py-2 text-green-400 hidden">
+                        <a 
+    href="https://wa.me/${student.mobno}?text=${encodeURIComponent('Hello, I am from TBPPP. We noticed that you haven\'t been solving questions this week. Please ensure to put in more effort. Let us know if you need assistance.')}" 
+    target="_blank" 
+    class="inline-flex items-center px-4 py-2 bg-green-500 text-white text-sm text-center rounded hover:bg-green-600 transition"
+    style="white-space: nowrap;"
+>
+    <i class="fab fa-whatsapp mr-2"></i>
+    Send Reminder
+</a>
+
+                    </td>
+
+
 
                 `;
                 leaderboardBody.appendChild(row);
@@ -795,6 +819,55 @@ document.addEventListener('DOMContentLoaded', async () => {
             filterData(e.target.value);
         });
 
+        function showWhatsappColumn() {
+            document.getElementById('whatsapp-header').classList.remove('hidden');
+            const rows = document.querySelectorAll('#leaderboard-body tr');
+            rows.forEach(row => {
+                row.querySelector('td:last-child').classList.remove('hidden');
+            });
+        }
+
+        function hideWhatsappColumn() {
+            document.getElementById('whatsapp-header').classList.add('hidden');
+            const rows = document.querySelectorAll('#leaderboard-body tr');
+            rows.forEach(row => {
+                row.querySelector('td:last-child').classList.add('hidden');
+            });
+        }
+
+
+        document.getElementById('search-bar').addEventListener('input', function (e) {
+            const s = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#leaderboard-body tr');
+            if (s.includes("show")) {
+                showWhatsappColumn(); // Show the WhatsApp column
+                e.target.value=''
+                rows.forEach(row => {
+                    // const name = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                    // if (name.includes(s)) {
+                        row.style.display = '';
+                    
+                });
+            } else if (s.includes("hide")){
+                hideWhatsappColumn(); // Hide the WhatsApp column
+                e.target.value=''
+                rows.forEach(row => {
+                    // const name = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                    // if (name.includes(s)) {
+                        row.style.display = '';
+                    
+                });
+            }else{
+                rows.forEach(row => {
+                    const name = row.querySelector('td:nth-child(4)').textContent.toLowerCase();
+                    if (name.includes(s)) {
+                        row.style.display = '';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+            }
+        });
         document.getElementById('export-btn').addEventListener('click', () => {
             exportToCSV(filteredData); // Export only filtered data
         });

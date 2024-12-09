@@ -109,31 +109,39 @@ async function fetchAndSaveData() {
     const names = fs.readFileSync('name.txt', 'utf-8').split('\n').map(line => line.trim()).filter(Boolean);
     const urls = fs.readFileSync('urls.txt', 'utf-8').split('\n').map(line => line.trim()).filter(Boolean);
     const sections = fs.readFileSync('sections.txt', 'utf-8').split('\n').map(line => line.trim()).filter(Boolean);
-    const day = fs.readFileSync('day.txt','utf-8').split('\n').map(line=>line.trim()).filter(Boolean);
-    
-    if (rolls.length !== names.length || names.length !== urls.length || names.length !== sections.length) {
-      console.error('Error: The number of rolls, names, URLs, and sections do not match.');
+    const day = fs.readFileSync('day.txt', 'utf-8').split('\n').map(line => line.trim()).filter(Boolean);
+    const mobnos = fs.readFileSync('mobno.txt', 'utf-8').split('\n').map(line => line.trim()).filter(Boolean);
+
+    // Validate input lengths
+    if (
+      rolls.length !== names.length || 
+      names.length !== urls.length || 
+      names.length !== sections.length || 
+      names.length !== mobnos.length
+    ) {
+      console.error('Error: The number of rolls, names, URLs, sections, and phone numbers do not match.');
       return;
     }
 
     console.log('Input files read successfully.');
     const combinedData = [];
 
-    
     for (let i = 0; i < rolls.length; i++) {
       const roll = rolls[i];
       const name = names[i];
       const url = urls[i];
       const section = sections[i];
       const dayi = day[i];
-      let studentData = { roll, name, url, section, dayi };
+      const mobno = mobnos[i];
 
-      console.log(`Processing data for roll number: ${roll}, name: ${name}, section: ${section}, day: ${dayi}`);
+      let studentData = { roll, name, url, section, dayi, mobno };
 
-      
+      console.log(`Processing data for roll number: ${roll}, name: ${name}, section: ${section}, day: ${dayi}, phone: ${mobno}`);
+
+      // Fetch LeetCode data if the URL is valid
       if (url.startsWith('https://leetcode.com/u/')) {
         var username = url.split('/u/')[1];
-        if (username.charAt(username.length - 1) == '/') username = username.substring(0, username.length - 1);
+        if (username.charAt(username.length - 1) === '/') username = username.substring(0, username.length - 1);
         console.log(`Fetching data for LeetCode username: ${username}`);
 
         try {
@@ -158,20 +166,22 @@ async function fetchAndSaveData() {
 
       combinedData.push(studentData);
     }
-    
 
+    // Sort combined data by total solved in descending order
     combinedData.sort((a, b) => {
       const aTotalSolved = isNaN(a.totalSolved) ? 0 : a.totalSolved;
       const bTotalSolved = isNaN(b.totalSolved) ? 0 : b.totalSolved;
       return bTotalSolved - aTotalSolved;
     });
 
+    // Save to data.json
     fs.writeFileSync('data.json', JSON.stringify(combinedData, null, 2));
     console.log('Data saved to data.json successfully.');
   } catch (error) {
     console.error('Error processing data:', error);
   }
 }
+
 
 app.get('/data', (req, res) => {
   res.sendFile(__dirname + '/data.json');
