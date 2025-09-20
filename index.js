@@ -362,6 +362,9 @@ app.get('/dataSecond', (req, res) => {
 app.get('/dataChange', (req, res) => {
   res.sendFile(__dirname + '/admin.html'); 
 });
+app.get('/dataAI', (req, res) => {
+  res.sendFile(__dirname + '/data.json'); 
+});
 
 app.post('/dataChange', async (req, res) => {
   const rollNumber = req.body.rollNumber;
